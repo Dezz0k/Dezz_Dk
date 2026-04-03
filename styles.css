@@ -138,7 +138,8 @@ body {
 /* —— Pink petals (glass + solid) —— */
 .fx {
   position: fixed;
-  top: 0;
+  /* Extend above the viewport so petals aren’t hard-clipped at the top edge */
+  top: -22vh;
   bottom: 0;
   left: 0;
   right: 0;
@@ -148,7 +149,23 @@ body {
 }
 
 .fx-petals {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  min-height: 100%;
+  /* Soft fade at the top of the screen (no sharp cut-off line) */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 8%,
+    #000 18%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 8%,
+    #000 18%
+  );
 }
 
 .petal {
@@ -157,6 +174,7 @@ body {
   border-radius: 50% 50% 50% 0;
   animation: petal-drift linear infinite;
   filter: drop-shadow(0 0 4px rgba(255, 105, 180, 0.45));
+  will-change: transform;
 }
 
 .petal--glass {
@@ -178,10 +196,10 @@ body {
 
 @keyframes petal-drift {
   0% {
-    transform: translateY(-5vh) translateX(0) rotate(calc(var(--rot, 0) * 1deg));
+    transform: translateY(-18vh) translateX(0) rotate(calc(var(--rot, 0) * 1deg));
   }
   100% {
-    transform: translateY(105vh) translateX(-28px) rotate(calc(var(--rot, 0) * 1deg + 720deg));
+    transform: translateY(118vh) translateX(-28px) rotate(calc(var(--rot, 0) * 1deg + 720deg));
   }
 }
 

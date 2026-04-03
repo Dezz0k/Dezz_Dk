@@ -203,6 +203,7 @@
       var glass = Math.random() > 0.42;
       p.className = "petal " + (glass ? "petal--glass" : "petal--solid");
       p.style.left = Math.random() * 100 + "%";
+      p.style.top = Math.random() * 100 + "%";
       p.style.animationDuration = 11 + Math.random() * 18 + "s";
       p.style.animationDelay = Math.random() * 12 + "s";
       p.style.setProperty("--rot", String(Math.random() * 360));
