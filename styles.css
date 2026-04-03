@@ -59,6 +59,60 @@ body {
   object-fit: cover;
 }
 
+/* —— Welcome gate (first click starts video + sound) —— */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  cursor: pointer;
+  text-align: center;
+  background: rgba(8, 4, 12, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.welcome-overlay.is-dismissed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.welcome-overlay__title {
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fdf2f8;
+  text-shadow: 0 0 40px rgba(236, 72, 153, 0.45);
+}
+
+.welcome-overlay__hint {
+  margin: 0;
+  font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+  font-weight: 600;
+  color: rgba(252, 231, 243, 0.85);
+  letter-spacing: 0.04em;
+}
+
+.welcome-overlay:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-overlay {
+    transition: none;
+  }
+}
+
 .bg-scrim {
   position: absolute;
   inset: 0;

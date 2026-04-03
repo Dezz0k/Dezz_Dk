@@ -6,11 +6,16 @@
   var panelMain = document.getElementById("panel-main");
   var panelServers = document.getElementById("panel-servers");
   var tabToggle = document.getElementById("tab-toggle");
+  var welcomeOverlay = document.getElementById("welcome-overlay");
 
   var HEART_SVG =
     '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
     '<path fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.7)" stroke-width="0.85" ' +
     'd="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+
+  function siteStarted() {
+    return document.body.classList.contains("site-started");
+  }
 
   function syncSoundLabel() {
     if (!videoEl || !unmuteBtn) return;
@@ -49,9 +54,47 @@
     return Promise.resolve();
   }
 
+  function dismissWelcome() {
+    if (!welcomeOverlay || siteStarted()) return;
+    document.body.classList.add("site-started");
+    welcomeOverlay.classList.add("is-dismissed");
+    welcomeOverlay.setAttribute("aria-hidden", "true");
+    welcomeOverlay.setAttribute("tabindex", "-1");
+    playWithSoundPreferred()
+      .catch(function () {})
+      .finally(function () {
+        syncSoundLabel();
+      });
+  }
+
+  function initWelcome() {
+    if (!welcomeOverlay) return;
+    welcomeOverlay.addEventListener("click", function (e) {
+      e.preventDefault();
+      dismissWelcome();
+    });
+    welcomeOverlay.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        dismissWelcome();
+      }
+    });
+    setTimeout(function () {
+      try {
+        welcomeOverlay.focus();
+      } catch (err) {}
+    }, 0);
+  }
+
   function initVideo() {
     if (!videoEl) return;
     initVideoTrim();
+    initWelcome();
+
+    if (videoEl) {
+      videoEl.pause();
+      videoEl.muted = true;
+    }
 
     var sourceEl = videoEl.querySelector("source");
     if (sourceEl) {
@@ -63,57 +106,40 @@
           try {
             sourceEl.src = new URL("peekaboo-bg.mp4", document.baseURI).href;
             videoEl.load();
-            playWithSoundPreferred()
-              .catch(function () {})
-              .finally(function () {
-                syncSoundLabel();
-              });
+            if (siteStarted()) {
+              playWithSoundPreferred()
+                .catch(function () {})
+                .finally(function () {
+                  syncSoundLabel();
+                });
+            }
           } catch (e) {}
         },
         { passive: true }
       );
     }
 
-    function tryPlay() {
-      playWithSoundPreferred()
-        .catch(function () {})
-        .finally(function () {
-          syncSoundLabel();
-        });
-    }
-
-    tryPlay();
-
     document.addEventListener(
       "visibilitychange",
       function () {
-        if (!document.hidden) tryPlay();
+        if (document.hidden || !siteStarted() || !videoEl) return;
+        var p = videoEl.play();
+        if (p && typeof p.catch === "function") {
+          p.catch(function () {});
+        }
       },
       { passive: true }
     );
-
-    var unlocked = false;
-    function unlockOnce() {
-      if (unlocked) return;
-      unlocked = true;
-      playWithSoundPreferred()
-        .catch(function () {})
-        .finally(function () {
-          syncSoundLabel();
-        });
-      document.removeEventListener("pointerdown", unlockOnce);
-      document.removeEventListener("touchstart", unlockOnce);
-      document.removeEventListener("keydown", unlockOnce);
-    }
-    document.addEventListener("pointerdown", unlockOnce, { passive: true });
-    document.addEventListener("touchstart", unlockOnce, { passive: true });
-    document.addEventListener("keydown", unlockOnce, { passive: true });
   }
 
   function initUnmute() {
     if (!videoEl || !unmuteBtn) return;
     unmuteBtn.addEventListener("click", function (e) {
       e.stopPropagation();
+      if (!siteStarted()) {
+        dismissWelcome();
+        return;
+      }
       videoEl.muted = !videoEl.muted;
       var p = videoEl.play();
       if (p && typeof p.catch === "function") {
@@ -166,7 +192,7 @@
   var maxHearts = 14;
 
   function spawnHeart(clientX, clientY) {
-    if (!heartLayer) return;
+    if (!heartLayer || !siteStarted()) return;
     var now = Date.now();
     if (now - lastHeart < 72) return;
     lastHeart = now;
@@ -201,6 +227,8 @@
   initUnmute();
   initTab();
   initPetals();
+
+  syncSoundLabel();
 
   window.addEventListener("mousemove", onMove, { passive: true });
   window.addEventListener("touchmove", onMove, { passive: true });

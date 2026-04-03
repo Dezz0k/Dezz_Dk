@@ -31,10 +31,21 @@
     })();
   </script>
   <div class="bg-video-wrap" aria-hidden="true">
-    <video id="bg-video" class="bg-video" autoplay loop playsinline preload="auto">
+    <video id="bg-video" class="bg-video" muted loop playsinline preload="auto">
       <source src="peekaboo-bg.mp4" type="video/mp4" />
     </video>
     <div class="bg-scrim"></div>
+  </div>
+
+  <div
+    id="welcome-overlay"
+    class="welcome-overlay"
+    role="button"
+    tabindex="0"
+    aria-label="Start site — click anywhere"
+  >
+    <p class="welcome-overlay__title">Welcome</p>
+    <p class="welcome-overlay__hint">Click anywhere to start</p>
   </div>
 
   <div class="fx fx-petals" id="fx-petals" aria-hidden="true"></div>
