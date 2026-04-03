@@ -1,70 +1,65 @@
 (function () {
-  var snowEl = document.getElementById("fx-snow");
-  var thunderEl = document.getElementById("fx-thunder");
   var petalsEl = document.getElementById("fx-petals");
   var heartLayer = document.getElementById("heart-layer");
+  var videoEl = document.getElementById("bg-video");
+  var unmuteBtn = document.getElementById("unmute-btn");
 
   var HEART_SVG =
     '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
     '<path fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.7)" stroke-width="0.85" ' +
     'd="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
 
-  function initSnow() {
-    if (!snowEl) return;
-    var n = 48;
-    for (var i = 0; i < n; i++) {
-      var s = document.createElement("span");
-      s.className = "snowflake";
-      s.style.left = Math.random() * 100 + "%";
-      s.style.animationDuration = 7 + Math.random() * 9 + "s";
-      s.style.animationDelay = Math.random() * 8 + "s";
-      var sz = 3 + Math.random() * 4;
-      s.style.width = sz + "px";
-      s.style.height = sz + "px";
-      s.style.opacity = String(0.45 + Math.random() * 0.5);
-      snowEl.appendChild(s);
+  function initVideo() {
+    if (!videoEl) return;
+    function tryPlay() {
+      var p = videoEl.play();
+      if (p && typeof p.catch === "function") {
+        p.catch(function () {});
+      }
     }
+    tryPlay();
+    document.addEventListener(
+      "visibilitychange",
+      function () {
+        if (!document.hidden) tryPlay();
+      },
+      { passive: true }
+    );
   }
 
-  function initThunder() {
-    if (!thunderEl) return;
-    var flash = document.createElement("div");
-    flash.className = "fx-thunder__flash";
-    thunderEl.appendChild(flash);
-
-    function strike() {
-      flash.classList.remove("is-active");
-      void flash.offsetWidth;
-      flash.classList.add("is-active");
-
-      var bolt = document.createElement("div");
-      bolt.className = "fx-thunder__bolt";
-      bolt.style.left = 15 + Math.random() * 70 + "%";
-      thunderEl.appendChild(bolt);
-      void bolt.offsetWidth;
-      bolt.classList.add("is-strike");
-      setTimeout(function () {
-        bolt.remove();
-      }, 400);
+  function initUnmute() {
+    if (!videoEl || !unmuteBtn) return;
+    function syncLabel() {
+      var on = !videoEl.muted;
+      unmuteBtn.textContent = on ? "Sound off" : "Sound on";
+      unmuteBtn.setAttribute("aria-pressed", on ? "true" : "false");
+      unmuteBtn.setAttribute("aria-label", on ? "Mute video" : "Enable video sound");
     }
-
-    function schedule() {
-      strike();
-      setTimeout(schedule, 2200 + Math.random() * 4200);
-    }
-    setTimeout(schedule, 800 + Math.random() * 1500);
+    syncLabel();
+    unmuteBtn.addEventListener("click", function () {
+      videoEl.muted = !videoEl.muted;
+      var p = videoEl.play();
+      if (p && typeof p.catch === "function") {
+        p.catch(function () {});
+      }
+      syncLabel();
+    });
   }
 
   function initPetals() {
     if (!petalsEl) return;
-    var n = 22;
+    var n = 42;
     for (var i = 0; i < n; i++) {
       var p = document.createElement("span");
-      p.className = "petal " + (Math.random() > 0.45 ? "petal--pink" : "petal--black");
+      var glass = Math.random() > 0.42;
+      p.className = "petal " + (glass ? "petal--glass" : "petal--solid");
       p.style.left = Math.random() * 100 + "%";
-      p.style.animationDuration = 12 + Math.random() * 16 + "s";
-      p.style.animationDelay = Math.random() * 10 + "s";
+      p.style.animationDuration = 11 + Math.random() * 18 + "s";
+      p.style.animationDelay = Math.random() * 12 + "s";
       p.style.setProperty("--rot", String(Math.random() * 360));
+      var w = 10 + Math.random() * 10;
+      p.style.width = w + "px";
+      p.style.height = w * 1.25 + "px";
       petalsEl.appendChild(p);
     }
   }
@@ -105,8 +100,8 @@
     spawnHeart(x, y);
   }
 
-  initSnow();
-  initThunder();
+  initVideo();
+  initUnmute();
   initPetals();
 
   window.addEventListener("mousemove", onMove, { passive: true });

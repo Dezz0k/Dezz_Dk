@@ -8,17 +8,16 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="aura" aria-hidden="true">
-    <span class="aura__blob aura__blob--1"></span>
-    <span class="aura__blob aura__blob--2"></span>
-    <span class="aura__blob aura__blob--3"></span>
+  <div class="bg-video-wrap" aria-hidden="true">
+    <video id="bg-video" class="bg-video" autoplay muted loop playsinline>
+      <source src="peekaboo-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="bg-scrim"></div>
   </div>
 
-  <div class="fx fx-snow" id="fx-snow" aria-hidden="true"></div>
-  <div class="fx fx-thunder" id="fx-thunder" aria-hidden="true"></div>
   <div class="fx fx-petals" id="fx-petals" aria-hidden="true"></div>
 
-  <main class="page">
+  <main class="page page--enter">
     <div class="layout">
       <section class="col col--yuni">
         <h2 class="col__heading">Yuni · .yxni</h2>
@@ -44,21 +43,21 @@
         </article>
 
         <nav class="links" aria-label="Yuni links">
-          <a class="btn btn--vr btn--vr-alt" href="https://vrchat.com/home/user/usr_77079dce-0793-47f8-a589-4caa4406ff89" rel="noopener noreferrer">
+          <a class="btn btn--vr btn--vr-alt" href="https://vrchat.com/home/user/usr_77079dce-0793-47f8-a589-4caa4406ff89" target="_blank" rel="noopener noreferrer">
             <span class="btn__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.74 6H3.26A2.25 2.25 0 001 8.25v7.5A2.25 2.25 0 003.26 18h4.5a2.25 2.25 0 002.1-1.5h4.28a2.25 2.25 0 002.1 1.5h4.5A2.25 2.25 0 0023 15.75v-7.5A2.25 2.25 0 0020.74 6zM8 14a2 2 0 110-4 2 2 0 010 4zm8 0a2 2 0 110-4 2 2 0 010 4z"/></svg>
             </span>
             <span class="btn__text">VRChat — Yhvi</span>
           </a>
 
-          <a class="btn btn--ig" href="https://www.instagram.com/yxni.vr/" rel="noopener noreferrer">
+          <a class="btn btn--ig" href="https://www.instagram.com/yxni.vr/" target="_blank" rel="noopener noreferrer">
             <span class="btn__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 4.354-2.617 6.78-6.98 6.98C15.668 23.986 15.259 24 12 24c-3.259 0-3.668-.014-4.948-.072-4.354-.2-6.78-2.618-6.98-6.98C.014 15.668 0 15.259 0 12c0-3.259.014-3.668.072-4.948.2-4.358 2.618-6.78 6.98-6.98C8.332.014 8.741 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
             </span>
             <span class="btn__text">Yuni’s Instagram</span>
           </a>
 
-          <a class="btn btn--spotify" href="https://open.spotify.com/user/31noqvwskx63wikzrjejsgnbpklq" rel="noopener noreferrer">
+          <a class="btn btn--spotify" href="https://open.spotify.com/user/31noqvwskx63wikzrjejsgnbpklq" target="_blank" rel="noopener noreferrer">
             <span class="btn__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
             </span>
@@ -98,7 +97,7 @@
         </article>
 
         <nav class="links" aria-label="Dezz links">
-          <a class="btn btn--vr" href="https://vrchat.com/home/user/usr_abbdde35-d2c0-4aa5-a2e9-47bf20c04127" rel="noopener noreferrer">
+          <a class="btn btn--vr" href="https://vrchat.com/home/user/usr_abbdde35-d2c0-4aa5-a2e9-47bf20c04127" target="_blank" rel="noopener noreferrer">
             <span class="btn__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.74 6H3.26A2.25 2.25 0 001 8.25v7.5A2.25 2.25 0 003.26 18h4.5a2.25 2.25 0 002.1-1.5h4.28a2.25 2.25 0 002.1 1.5h4.5A2.25 2.25 0 0023 15.75v-7.5A2.25 2.25 0 0020.74 6zM8 14a2 2 0 110-4 2 2 0 010 4zm8 0a2 2 0 110-4 2 2 0 010 4z"/></svg>
             </span>
@@ -129,6 +128,10 @@
       </section>
     </div>
   </main>
+
+  <button type="button" id="unmute-btn" class="unmute-btn" aria-pressed="false" aria-label="Enable video sound">
+    Sound on
+  </button>
 
   <div id="heart-layer" class="heart-layer" aria-hidden="true"></div>
 
