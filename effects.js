@@ -53,6 +53,27 @@
     if (!videoEl) return;
     initVideoTrim();
 
+    var sourceEl = videoEl.querySelector("source");
+    if (sourceEl) {
+      videoEl.addEventListener(
+        "error",
+        function () {
+          if (sourceEl.dataset.retried) return;
+          sourceEl.dataset.retried = "1";
+          try {
+            sourceEl.src = new URL("peekaboo-bg.mp4", document.baseURI).href;
+            videoEl.load();
+            playWithSoundPreferred()
+              .catch(function () {})
+              .finally(function () {
+                syncSoundLabel();
+              });
+          } catch (e) {}
+        },
+        { passive: true }
+      );
+    }
+
     function tryPlay() {
       playWithSoundPreferred()
         .catch(function () {})

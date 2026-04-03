@@ -2,14 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- GitHub Pages project sites live under /RepoName/ — without this, assets 404 and the video/sound break -->
+  <script>
+    (function () {
+      var base = "/";
+      if (location.hostname.indexOf("github.io") !== -1) {
+        var parts = location.pathname.split("/").filter(Boolean);
+        if (parts.length) {
+          base = "/" + parts[0] + "/";
+        }
+      }
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="description" content="Dezz — links &amp; profiles" />
   <title>Dezz</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <script>
+    (function () {
+      if (location.hostname.indexOf("github.io") === -1) return;
+      var p = location.pathname;
+      if (p.length > 1 && p.indexOf("/", p.length - 1) === -1 && p.split("/").filter(Boolean).length === 1) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
   <div class="bg-video-wrap" aria-hidden="true">
-    <video id="bg-video" class="bg-video" autoplay loop playsinline>
+    <video id="bg-video" class="bg-video" autoplay loop playsinline preload="auto">
       <source src="peekaboo-bg.mp4" type="video/mp4" />
     </video>
     <div class="bg-scrim"></div>
