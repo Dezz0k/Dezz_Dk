@@ -54,15 +54,48 @@
     return Promise.resolve();
   }
 
+  /** First tap after load: always prefer unmuted (user gesture allows audio). */
+  function playWelcomeStartWithSound() {
+    if (!videoEl) return Promise.resolve();
+    videoEl.muted = false;
+    videoEl.volume = 1;
+    var p = videoEl.play();
+    if (!p || typeof p.then !== "function") {
+      return Promise.resolve();
+    }
+    return p
+      .then(function () {
+        videoEl.muted = false;
+        videoEl.volume = 1;
+      })
+      .catch(function () {
+        videoEl.muted = false;
+        videoEl.volume = 1;
+        return videoEl.play();
+      })
+      .catch(function () {
+        videoEl.muted = false;
+        videoEl.volume = 1;
+        return videoEl.play();
+      })
+      .catch(function () {
+        videoEl.muted = true;
+        return videoEl.play();
+      });
+  }
+
   function dismissWelcome() {
     if (!welcomeOverlay || siteStarted()) return;
     document.body.classList.add("site-started");
     welcomeOverlay.classList.add("is-dismissed");
     welcomeOverlay.setAttribute("aria-hidden", "true");
     welcomeOverlay.setAttribute("tabindex", "-1");
-    playWithSoundPreferred()
+    playWelcomeStartWithSound()
       .catch(function () {})
       .finally(function () {
+        if (videoEl && !videoEl.muted) {
+          videoEl.volume = 1;
+        }
         syncSoundLabel();
       });
   }
