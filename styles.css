@@ -648,7 +648,110 @@ body.view-servers .tab-dock {
   color: var(--muted);
 }
 
-/* —— Video sound toggle —— */
+/* —— Volume slider (visual: mute ← → max, locked at max) —— */
+.volume-rail {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(12, 8, 18, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+body.site-started .volume-rail {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.volume-rail__end {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(252, 231, 243, 0.55);
+  flex-shrink: 0;
+}
+
+.volume-rail__slider {
+  width: min(42vw, 9.5rem);
+  height: 6px;
+  border-radius: 999px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: not-allowed;
+}
+
+.volume-rail__slider:disabled {
+  opacity: 1;
+}
+
+.volume-rail__slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fbcfe8, #ec4899);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+  margin-top: -4px;
+}
+
+.volume-rail__slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fbcfe8, #ec4899);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+}
+
+.volume-rail__slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(236, 72, 153, 0.85) 100%
+  );
+}
+
+.volume-rail__slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(236, 72, 153, 0.85) 100%
+  );
+}
+
+@media (max-width: 520px) {
+  .volume-rail {
+    bottom: 4.75rem;
+    right: 0.65rem;
+    padding: 0.35rem 0.55rem;
+  }
+
+  .volume-rail__slider {
+    width: min(52vw, 8rem);
+  }
+}
+
 /* —— Glass heart cursor trail —— */
 .heart-layer {
   position: fixed;

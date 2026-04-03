@@ -184,6 +184,24 @@
     Servers
   </button>
 
+  <div class="volume-rail" id="volume-rail" aria-label="Volume" title="Volume locked at maximum">
+    <span class="volume-rail__end" aria-hidden="true">Mute</span>
+    <input
+      id="volume-slider"
+      class="volume-rail__slider"
+      type="range"
+      min="0"
+      max="100"
+      value="100"
+      disabled
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="100"
+      aria-valuetext="Maximum volume"
+    />
+    <span class="volume-rail__end" aria-hidden="true">Max</span>
+  </div>
+
   <div id="heart-layer" class="heart-layer" aria-hidden="true"></div>
 
   <script src="effects.js" defer></script>
