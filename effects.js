@@ -91,7 +91,6 @@
 
   function initUnmute() {
     if (!videoEl || !unmuteBtn) return;
-    syncSoundLabel();
     unmuteBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       videoEl.muted = !videoEl.muted;
