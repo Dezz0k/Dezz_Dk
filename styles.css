@@ -649,42 +649,6 @@ body.view-servers .tab-dock {
 }
 
 /* —— Video sound toggle —— */
-.unmute-btn {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 60;
-  padding: 0.55rem 1rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(236, 72, 153, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.unmute-btn:hover {
-  background: rgba(236, 72, 153, 0.52);
-  transform: scale(1.03);
-}
-
-.unmute-btn:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-
-@media (max-width: 520px) {
-  .unmute-btn {
-    bottom: 4.75rem;
-  }
-}
-
 /* —— Glass heart cursor trail —— */
 .heart-layer {
   position: fixed;

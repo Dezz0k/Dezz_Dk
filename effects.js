@@ -2,7 +2,6 @@
   var petalsEl = document.getElementById("fx-petals");
   var heartLayer = document.getElementById("heart-layer");
   var videoEl = document.getElementById("bg-video");
-  var unmuteBtn = document.getElementById("unmute-btn");
   var panelMain = document.getElementById("panel-main");
   var panelServers = document.getElementById("panel-servers");
   var tabToggle = document.getElementById("tab-toggle");
@@ -17,12 +16,11 @@
     return document.body.classList.contains("site-started");
   }
 
-  function syncSoundLabel() {
-    if (!videoEl || !unmuteBtn) return;
-    var on = !videoEl.muted;
-    unmuteBtn.textContent = on ? "Sound off" : "Sound on";
-    unmuteBtn.setAttribute("aria-pressed", on ? "true" : "false");
-    unmuteBtn.setAttribute("aria-label", on ? "Mute video" : "Enable video sound");
+  /** After welcome: audio always on — no mute toggle in the UI. */
+  function forceSoundOn() {
+    if (!videoEl || !siteStarted()) return;
+    videoEl.muted = false;
+    videoEl.volume = 1;
   }
 
   function initVideoTrim() {
@@ -40,21 +38,21 @@
     });
   }
 
-  function playWithSoundPreferred() {
+  function playWithSoundOnly() {
     if (!videoEl) return Promise.resolve();
     videoEl.muted = false;
     videoEl.volume = 1;
     var p = videoEl.play();
     if (p && typeof p.catch === "function") {
       return p.catch(function () {
-        videoEl.muted = true;
+        videoEl.muted = false;
+        videoEl.volume = 1;
         return videoEl.play();
       });
     }
     return Promise.resolve();
   }
 
-  /** First tap after load: always prefer unmuted (user gesture allows audio). */
   function playWelcomeStartWithSound() {
     if (!videoEl) return Promise.resolve();
     videoEl.muted = false;
@@ -65,8 +63,7 @@
     }
     return p
       .then(function () {
-        videoEl.muted = false;
-        videoEl.volume = 1;
+        forceSoundOn();
       })
       .catch(function () {
         videoEl.muted = false;
@@ -79,8 +76,12 @@
         return videoEl.play();
       })
       .catch(function () {
-        videoEl.muted = true;
+        videoEl.muted = false;
+        videoEl.volume = 1;
         return videoEl.play();
+      })
+      .then(function () {
+        forceSoundOn();
       });
   }
 
@@ -93,10 +94,12 @@
     playWelcomeStartWithSound()
       .catch(function () {})
       .finally(function () {
-        if (videoEl && !videoEl.muted) {
-          videoEl.volume = 1;
-        }
-        syncSoundLabel();
+        forceSoundOn();
+        var n = 0;
+        var pulse = setInterval(function () {
+          forceSoundOn();
+          if (++n >= 20) clearInterval(pulse);
+        }, 150);
       });
   }
 
@@ -124,10 +127,16 @@
     initVideoTrim();
     initWelcome();
 
-    if (videoEl) {
-      videoEl.pause();
-      videoEl.muted = true;
-    }
+    videoEl.pause();
+    videoEl.muted = true;
+
+    videoEl.addEventListener(
+      "playing",
+      function () {
+        if (siteStarted()) forceSoundOn();
+      },
+      { passive: true }
+    );
 
     var sourceEl = videoEl.querySelector("source");
     if (sourceEl) {
@@ -140,10 +149,10 @@
             sourceEl.src = new URL("peekaboo-bg.mp4", document.baseURI).href;
             videoEl.load();
             if (siteStarted()) {
-              playWithSoundPreferred()
+              playWithSoundOnly()
                 .catch(function () {})
                 .finally(function () {
-                  syncSoundLabel();
+                  forceSoundOn();
                 });
             }
           } catch (e) {}
@@ -156,6 +165,7 @@
       "visibilitychange",
       function () {
         if (document.hidden || !siteStarted() || !videoEl) return;
+        forceSoundOn();
         var p = videoEl.play();
         if (p && typeof p.catch === "function") {
           p.catch(function () {});
@@ -163,23 +173,6 @@
       },
       { passive: true }
     );
-  }
-
-  function initUnmute() {
-    if (!videoEl || !unmuteBtn) return;
-    unmuteBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (!siteStarted()) {
-        dismissWelcome();
-        return;
-      }
-      videoEl.muted = !videoEl.muted;
-      var p = videoEl.play();
-      if (p && typeof p.catch === "function") {
-        p.catch(function () {});
-      }
-      syncSoundLabel();
-    });
   }
 
   function initTab() {
@@ -257,11 +250,8 @@
   }
 
   initVideo();
-  initUnmute();
   initTab();
   initPetals();
-
-  syncSoundLabel();
 
   window.addEventListener("mousemove", onMove, { passive: true });
   window.addEventListener("touchmove", onMove, { passive: true });
